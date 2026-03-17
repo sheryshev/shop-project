@@ -15,6 +15,9 @@
 
 ---
 ## Адрес онлайн сервиса
+
+https://shop-project-production-b4dd.up.railway.app/
+
 https://shop-project-production.up.railway.app/
 
 ---
