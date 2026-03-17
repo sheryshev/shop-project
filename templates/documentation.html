@@ -2,106 +2,112 @@
 
 {% block content %}
 <style>
-  /* Стиль для увеличения картинки при клике (простой эффект) */
+  /* Стиль для контейнеров */
+  details {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+  }
+
+  /* Стиль заголовка */
+  summary {
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+    list-style: none; /* Убираем стандартную стрелочку в некоторых браузерах */
+  }
+
+  summary::-webkit-details-marker {
+    display: none; /* Убираем стрелочку в Chrome/Safari */
+  }
+
+  summary::before {
+    content: "▶ ";
+    color: #007bff;
+    transition: 0.2s;
+  }
+
+  details[open] summary::before {
+    content: "▼ ";
+  }
+
+  details[open] {
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  }
+
+  /* Эффект увеличения картинки при наведении */
+  .img-zoom-container {
+    text-align: center;
+    padding: 20px;
+    overflow: hidden; /* Чтобы картинка не вылезала за границы при увеличении */
+  }
+
   .zoomable {
-    transition: transform 0.3s ease;
+    max-width: 100%;
+    height: auto;
+    transition: transform 0.4s ease;
     cursor: zoom-in;
+    border: 1px solid #ddd;
   }
+
+  .zoomable:hover {
+    transform: scale(1.1); /* Увеличение на 10% при наведении */
+  }
+
   .zoomable:active {
-    transform: scale(1.5);
-    z-index: 1000;
-    position: relative;
-  }
-  .card-header button {
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-    width: 100%;
-    text-align: left;
+    transform: scale(1.6); /* Сильное увеличение при зажатии мышкой */
+    cursor: grabbing;
   }
 </style>
 
 <h2>Документация проекта</h2>
+<p class="text-muted">Нажмите на заголовок секции, чтобы раскрыть содержимое.</p>
 
-<p>
-  Здесь описан функционал интернет-магазина с UML-схемами.
-</p>
+<hr>
 
-<!-- Аккордеон для скрытия блоков -->
-<div class="accordion" id="docAccordion">
-  
-  <!-- Блок 1: Основные процессы -->
-  <div class="card">
-    <div class="card-header" id="headingOne">
-      <h2 class="mb-0">
-        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne">
-          ▼ Основные процессы
-        </button>
-      </h2>
-    </div>
-    <div id="collapseOne" class="collapse show" data-parent="#docAccordion">
-      <div class="card-body">
-        <ul>
-          <li>Управление товарами</li>
-          <li>Обработка заказов</li>
-          <li>Управление пользователями</li>
-          <li>Интеграция с Kafka для событий и уведомлений</li>
-        </ul>
-      </div>
-    </div>
+<!-- Блок 1: Основные процессы -->
+<details open>
+  <summary>Основные процессы проекта</summary>
+  <div class="mt-3">
+    <ul>
+      <li><strong>Управление товарами:</strong> CRUD операции в админ-панели.</li>
+      <li><strong>Обработка заказов:</strong> Жизненный цикл заказа от создания до завершения.</li>
+      <li><strong>Управление пользователями:</strong> Регистрация, роли и профили.</li>
+      <li><strong>Интеграция с Kafka:</strong> Асинхронная обработка уведомлений и логирование событий.</li>
+    </ul>
   </div>
+</details>
 
-  <!-- Блок 2: Диаграмма классов -->
-  <div class="card">
-    <div class="card-header" id="headingTwo">
-      <h2 class="mb-0">
-        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo">
-          ▼ Диаграмма классов
-        </button>
-      </h2>
-    </div>
-    <div id="collapseTwo" class="collapse" data-parent="#docAccordion">
-      <div class="card-body text-center">
-        <img src="{{ url_for('static', filename='uml/class_diagram.png') }}" 
-             alt="Диаграмма классов" class="img-fluid border zoomable" title="Нажмите и держите для увеличения" />
-      </div>
-    </div>
+<!-- Блок 2: Диаграмма классов -->
+<details>
+  <summary>UML: Диаграмма классов</summary>
+  <div class="img-zoom-container">
+    <img src="{{ url_for('static', filename='uml/class_diagram.png') }}" 
+         alt="Диаграмма классов" class="zoomable" title="Наведите для увеличения, зажмите для зума">
   </div>
+</details>
 
-  <!-- Блок 3: Диаграмма последовательностей -->
-  <div class="card">
-    <div class="card-header" id="headingThree">
-      <h2 class="mb-0">
-        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree">
-          ▼ Диаграмма последовательностей
-        </button>
-      </h2>
-    </div>
-    <div id="collapseThree" class="collapse" data-parent="#docAccordion">
-      <div class="card-body text-center">
-        <img src="{{ url_for('static', filename='uml/sequence_diagram.png') }}" 
-             alt="Диаграмма последовательностей" class="img-fluid border zoomable" />
-      </div>
-    </div>
+<!-- Блок 3: Диаграмма последовательностей -->
+<details>
+  <summary>UML: Диаграмма последовательностей</summary>
+  <div class="img-zoom-container">
+    <img src="{{ url_for('static', filename='uml/sequence_diagram.png') }}" 
+         alt="Диаграмма последовательностей" class="zoomable">
   </div>
+</details>
 
-  <!-- Блок 4: Диаграмма прецедентов -->
-  <div class="card">
-    <div class="card-header" id="headingFour">
-      <h2 class="mb-0">
-        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFour">
-          ▼ Диаграмма прецедентов (Use Case)
-        </button>
-      </h2>
-    </div>
-    <div id="collapseFour" class="collapse" data-parent="#docAccordion">
-      <div class="card-body text-center">
-        <img src="{{ url_for('static', filename='uml/use_case_diagram.png') }}" 
-             alt="Диаграмма прецедентов" class="img-fluid border zoomable" />
-      </div>
-    </div>
+<!-- Блок 4: Диаграмма прецедентов -->
+<details>
+  <summary>UML: Диаграмма прецедентов (Use Case)</summary>
+  <div class="img-zoom-container">
+    <img src="{{ url_for('static', filename='uml/use_case_diagram.png') }}" 
+         alt="Диаграмма прецедентов" class="zoomable">
   </div>
-
-</div>
+</details>
 
 {% endblock %}
