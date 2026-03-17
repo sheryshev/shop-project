@@ -40,7 +40,12 @@ def consume_kafka_messages(topic):
 
 @app.route('/')
 def index():
-    return render_template('base.html')
+    sql = text("SELECT id, user_id, date, status FROM orders ORDER BY date DESC")
+    with engine.connect() as conn:
+        result = conn.execute(sql)
+        columns = result.keys()
+        orders = [dict(zip(columns, row)) for row in result]
+    return render_template('base.html', orders=orders)
 
 @app.route('/db', methods=['GET', 'POST'])
 def db_view():
