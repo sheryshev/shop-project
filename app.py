@@ -38,7 +38,7 @@ def consume_kafka_messages(topic):
         if len(kafka_messages_store[topic]) > 50:
             kafka_messages_store[topic].pop(0)
             
-def start_kafka_consumer():
+def kafka_consumer_worker():
     consumer = KafkaConsumer(
         'orders',
         bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
