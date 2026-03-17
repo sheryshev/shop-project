@@ -9,10 +9,11 @@ import logging
 import os
 from flask_sqlalchemy import SQLAlchemy
 
-
+# --- Настройка базы данных SQLite ---
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///store.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'store.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 
 class Order(db.Model):
@@ -25,7 +26,6 @@ class Order(db.Model):
 app.secret_key = 'your_secret_key'
 Bootstrap(app)
 
-# --- Настройка базы данных SQLite ---
 engine = create_engine('sqlite:///store.db', echo=False, future=True)
 
 # --- Настройки Kafka ---
