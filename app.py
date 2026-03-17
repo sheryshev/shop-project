@@ -176,8 +176,8 @@ def documentation():
 
 if __name__ == '__main__':
     # Запускаем Kafka слушателя в отдельном потоке
-    #consumer_thread = threading.Thread(target=kafka_consumer_worker, daemon=True)
-    #consumer_thread.start()
+    consumer_thread = threading.Thread(target=kafka_consumer_worker, daemon=True)
+    consumer_thread.start()
 
     # Запускаем Flask сервер
     port = int(os.environ.get("PORT", 5000))
