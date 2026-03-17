@@ -7,10 +7,20 @@ import threading
 import json
 import logging
 import os
-
+from flask_sqlalchemy import SQLAlchemy
 
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///store.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.String(50))
+    date = db.Column(db.String(50))
+    status = db.Column(db.String(50))
+    
 app.secret_key = 'your_secret_key'
 Bootstrap(app)
 
@@ -173,4 +183,5 @@ if __name__ == '__main__':
     consumer_thread.start()
 
     # Запускаем Flask сервер
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
