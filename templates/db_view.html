@@ -1,0 +1,40 @@
+{% extends "base.html" %} {% block content %}
+<h2>Управление базой данных</h2>
+<p>Здесь будет интерфейс для просмотра и отправки запросов к базе данных.</p>
+
+<!-- Форма для отправки SQL-запроса -->
+<form method="post">
+  <div class="mb-3">
+    <label for="sql_query" class="form-label">Введите SQL-запрос</label>
+    <textarea
+      class="form-control"
+      id="sql_query"
+      name="sql_query"
+      rows="4"
+    ></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">Отправить запрос</button>
+</form>
+
+<!-- Здесь позже будет вывод результатов -->
+{% if results %}
+<h3>Результаты запроса:</h3>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      {% for col in columns %}
+      <th>{{ col }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in results %}
+    <tr>
+      {% for col in columns %}
+      <td>{{ row[col] }}</td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %} {% endblock %}

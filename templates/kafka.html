@@ -1,0 +1,37 @@
+{% extends "base.html" %} {% block content %}
+<h2>Управление Kafka</h2>
+<p>Здесь будет интерфейс для отправки сообщений и просмотра топиков Kafka.</p>
+
+<form method="post">
+  <div class="mb-3">
+    <label for="kafka_topic" class="form-label">Топик</label>
+    <input
+      type="text"
+      class="form-control"
+      id="kafka_topic"
+      name="kafka_topic"
+      required
+    />
+  </div>
+  <div class="mb-3">
+    <label for="kafka_message" class="form-label">Сообщение</label>
+    <textarea
+      class="form-control"
+      id="kafka_message"
+      name="kafka_message"
+      rows="3"
+      required
+    ></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">Отправить сообщение</button>
+</form>
+
+<!-- Здесь позже будет вывод сообщений из Kafka -->
+{% if kafka_messages %}
+<h3>Сообщения из топика {{ current_topic }}:</h3>
+<ul class="list-group">
+  {% for msg in kafka_messages %}
+  <li class="list-group-item">{{ msg }}</li>
+  {% endfor %}
+</ul>
+{% endif %} {% endblock %}

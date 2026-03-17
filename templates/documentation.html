@@ -1,0 +1,45 @@
+{% extends "base.html" %} {% block content %}
+<h2>Документация проекта</h2>
+
+<p>
+  Здесь описан функционал интернет-магазина с UML-схемами, подготовленными
+  системным аналитиком.
+</p>
+
+<h3>Основные процессы</h3>
+<ul>
+  <li>Управление товарами</li>
+  <li>Обработка заказов</li>
+  <li>Управление пользователями</li>
+  <li>Интеграция с Kafka для событий и уведомлений</li>
+</ul>
+
+<h3>UML-диаграммы</h3>
+<div class="row">
+  <div class="col-md-6">
+    <h5>Диаграмма классов</h5>
+    <img
+      src="{{ url_for('static', filename='uml/class_diagram.png') }}"
+      alt="Диаграмма классов"
+      class="img-fluid border"
+    />
+  </div>
+  <div class="col-md-6">
+    <h5>Диаграмма последовательностей</h5>
+    <img
+      src="{{ url_for('static', filename='uml/sequence_diagram.png') }}"
+      alt="Диаграмма последовательностей"
+      class="img-fluid border"
+    />
+  </div>
+  <div class="col-md-6">
+    <h5>Диаграмма последовательностей</h5>
+    <img
+      src="{{ url_for('static', filename='uml/use_case_diagram.png') }}"
+      alt="Диаграмма прецедентов"
+      class="img-fluid border"
+    />
+  </div>
+</div>
+
+{% endblock %}
