@@ -67,7 +67,7 @@ def kafka_consumer_worker():
         else:
             print("!!! [Kafka Worker] CRITICAL: Could not connect to brokers !!!")
             return
-
+        consumer.poll(timeout_ms=1000)
         # Основной цикл обработки
         for message in consumer:
             order_data = message.value
@@ -169,7 +169,7 @@ def documentation():
 
 if __name__ == '__main__':
     # Запускаем Kafka слушателя в отдельном потоке
-    consumer_thread = threading.Thread(target=kafka_consumer_worker, daemon=True)
+    consumer_thread = threading.Thread(target=kafka_consumer_worker, daemon=False)
     consumer_thread.start()
 
     # Запускаем Flask сервер
