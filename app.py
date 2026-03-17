@@ -62,7 +62,7 @@ def kafka_consumer_worker():
         consumer = KafkaConsumer(
             'orders',
             bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
-            group_id='orders-group',
+            group_id='flask-group',
             auto_offset_reset='earliest',
             enable_auto_commit=True,
             # Добавляем таймаут на запрос метаданных, чтобы не виснуть вечно
