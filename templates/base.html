@@ -79,6 +79,7 @@
         </div>
       </div>
     </nav>
+    {% if request.endpoint == 'index' %}
     <h2>Текущие заказы</h2>
     {% if orders %}
     <table class="orders-table">
@@ -106,8 +107,7 @@
     </table>
     {% else %}
     <p>Заказов пока нет.</p>
-    {% endif %}
-
+    {% endif %} {% endif %}
     <div class="container">
       {% with messages = get_flashed_messages() %} {% if messages %}
       <div class="alert alert-info">
