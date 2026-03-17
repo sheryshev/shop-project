@@ -39,15 +39,21 @@ def consume_kafka_messages(topic):
             kafka_messages_store[topic].pop(0)
             
 def kafka_consumer_worker():
-    consumer = KafkaConsumer(
-        'orders',
-        bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
-        auto_offset_reset='earliest',
-        enable_auto_commit=True,
-        group_id='orders-group',
-        value_deserializer=lambda x: json.loads(x.decode('utf-8'))
-    )
-    print("Kafka consumer started")
+    
+    print("Starting Kafka consumer...")
+    try:
+        consumer = KafkaConsumer(
+            'orders',
+            bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
+            auto_offset_reset='earliest',
+            enable_auto_commit=True,
+            group_id='orders-group',
+            value_deserializer=lambda x: json.loads(x.decode('utf-8'))
+        )
+        print("Kafka consumer connected and listening")
+    except Exception as e:
+        print(f"Error starting Kafka consumer: {e}")
+        return
 
     for message in consumer:
         order_data = message.value
