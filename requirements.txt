@@ -2,3 +2,4 @@ Flask
 Flask-Bootstrap
 SQLAlchemy
 kafka-python-ng
+flask-sqlalchemy
