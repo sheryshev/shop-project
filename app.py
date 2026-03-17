@@ -37,7 +37,36 @@ def consume_kafka_messages(topic):
         kafka_messages_store[topic].append(message.value)
         if len(kafka_messages_store[topic]) > 50:
             kafka_messages_store[topic].pop(0)
+            
+def start_kafka_consumer():
+    consumer = KafkaConsumer(
+        'orders',
+        bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
+        auto_offset_reset='earliest',
+        enable_auto_commit=True,
+        group_id='orders-group',
+        value_deserializer=lambda x: json.loads(x.decode('utf-8'))
+    )
 
+    print("Kafka consumer started, listening to 'orders' topic...")
+
+    for message in consumer:
+        order_data = message.value
+        print(f"Received order data: {order_data}")
+
+        # Пример структуры order_data: {"user_id": 1, "date": "2026-03-17", "status": "new"}
+
+        # Добавляем запись в базу в контексте Flask
+        with app.app_context():
+            order = Order(
+                user_id=order_data.get('user_id'),
+                date=order_data.get('date'),
+                status=order_data.get('status')
+                # добавьте другие поля, если есть
+            )
+            db.session.add(order)
+            db.session.commit()
+            print(f"Order added to DB: {order.id}")
 # --- Роуты ---
 
 @app.route('/')
