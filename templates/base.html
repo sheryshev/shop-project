@@ -9,6 +9,42 @@
       rel="stylesheet"
     />
   </head>
+  <style>
+    table.orders-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: Arial, sans-serif;
+      margin-top: 20px;
+    }
+
+    table.orders-table thead {
+      background-color: #007bff; /* приятный синий цвет */
+      color: white;
+    }
+
+    table.orders-table th,
+    table.orders-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    table.orders-table tbody tr:hover {
+      background-color: #f1f7ff; /* легкий голубой фон при наведении */
+    }
+
+    table.orders-table tbody tr:nth-child(even) {
+      background-color: #f9f9f9; /* зебра-полосы для удобства чтения */
+    }
+
+    table.orders-table caption {
+      caption-side: top;
+      font-size: 1.5em;
+      margin-bottom: 10px;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
       <div class="container">
@@ -43,6 +79,34 @@
         </div>
       </div>
     </nav>
+    <h2>Текущие заказы</h2>
+    {% if orders %}
+    <table class="orders-table">
+      <caption>
+        Список текущих заказов
+      </caption>
+      <thead>
+        <tr>
+          <th>ID заказа</th>
+          <th>Пользователь</th>
+          <th>Дата</th>
+          <th>Статус</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in orders %}
+        <tr>
+          <td>{{ order.id }}</td>
+          <td>{{ order.user_id }}</td>
+          <td>{{ order.date }}</td>
+          <td>{{ order.status }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>Заказов пока нет.</p>
+    {% endif %}
 
     <div class="container">
       {% with messages = get_flashed_messages() %} {% if messages %}
