@@ -15,7 +15,10 @@ Bootstrap(app)
 engine = create_engine('sqlite:///store.db', echo=False, future=True)
 
 # --- Настройки Kafka ---
-KAFKA_BOOTSTRAP_SERVERS = ['localhost:9092']
+KAFKA_BOOTSTRAP_SERVERS = ['junction.proxy.rlwy.net:36612']
+
+#KAFKA_BOOTSTRAP_SERVERS = ['localhost:9092']
+
 kafka_messages_store = {}
 
 def consume_kafka_messages(topic):
