@@ -47,26 +47,20 @@ def kafka_consumer_worker():
         group_id='orders-group',
         value_deserializer=lambda x: json.loads(x.decode('utf-8'))
     )
-
-    print("Kafka consumer started, listening to 'orders' topic...")
+    print("Kafka consumer started")
 
     for message in consumer:
         order_data = message.value
-        print(f"Received order data: {order_data}")
-
-        # Пример структуры order_data: {"user_id": 1, "date": "2026-03-17", "status": "new"}
-
-        # Добавляем запись в базу в контексте Flask
+        print(f"Received order: {order_data}")
         with app.app_context():
             order = Order(
                 user_id=order_data.get('user_id'),
                 date=order_data.get('date'),
                 status=order_data.get('status')
-                # добавьте другие поля, если есть
             )
             db.session.add(order)
             db.session.commit()
-            print(f"Order added to DB: {order.id}")
+            print(f"Order saved with id {order.id}")
 # --- Роуты ---
 
 @app.route('/')
