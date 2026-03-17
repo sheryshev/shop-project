@@ -139,5 +139,9 @@ def documentation():
     return render_template('documentation.html')
 
 if __name__ == '__main__':
+    # Запускаем Kafka слушателя в отдельном потоке
+    consumer_thread = threading.Thread(target=kafka_consumer_worker, daemon=True)
+    consumer_thread.start()
+
+    # Запускаем Flask сервер
     app.run(host='0.0.0.0', port=5000, debug=True)
-    start_kafka_consumer()
