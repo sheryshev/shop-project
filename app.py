@@ -4,6 +4,8 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.exc import SQLAlchemyError
 from kafka import KafkaProducer, KafkaConsumer
 import threading
+import json
+import logging
 import os
 
 
@@ -38,42 +40,62 @@ def consume_kafka_messages(topic):
         if len(kafka_messages_store[topic]) > 50:
             kafka_messages_store[topic].pop(0)
             
+import json
+import logging
+from kafka import KafkaConsumer
+
 def kafka_consumer_worker():
+    print("--- [Kafka Worker] Starting ---")
     
-    print("Starting Kafka consumer...")
     try:
+        # Инициализация консьюмера
         consumer = KafkaConsumer(
             'orders',
             bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
+            group_id='orders-group',
             auto_offset_reset='earliest',
             enable_auto_commit=True,
-            group_id='orders-group',
+            # Добавляем таймаут на запрос метаданных, чтобы не виснуть вечно
+            request_timeout_ms=30000, 
             value_deserializer=lambda x: json.loads(x.decode('utf-8'))
         )
-        print("Kafka consumer connected and listening")
-    except Exception as e:
-        print(f"Error starting Kafka consumer: {e}")
-        return
-    # Проверяем, видит ли он брокера реально
-    if not consumer.bootstrap_connected():
-        print("Критическая ошибка: Нет физического соединения с брокером!")
-    else:
-        print("Физическое соединение установлено.")
+        
+        # Проверка физического соединения
+        if consumer.bootstrap_connected():
+            print(f"--- [Kafka Worker] Connected to {KAFKA_BOOTSTRAP_SERVERS} ---")
+            print(f"--- [Kafka Worker] Subscribed to topics: {consumer.topics()} ---")
+        else:
+            print("!!! [Kafka Worker] CRITICAL: Could not connect to brokers !!!")
+            return
+
+        # Основной цикл обработки
+        for message in consumer:
+            order_data = message.value
+            print(f"--- [Kafka Worker] Received order: {order_data} ---")
+            
+            try:
+                # Работа с БД внутри контекста Flask
+                with app.app_context():
+                    order = Order(
+                        user_id=order_data.get('user_id'),
+                        date=order_data.get('date'),
+                        status=order_data.get('status')
+                    )
+                    db.session.add(order)
+                    db.session.commit()
+                    print(f"--- [Kafka Worker] Order saved with ID: {order.id} ---")
+            
+            except Exception as db_err:
+                print(f"!!! [Kafka Worker] Database Error: {db_err} !!!")
+                db.session.rollback() # Откатываем сессию при ошибке
+
+    except Exception as kafka_err:
+        print(f"!!! [Kafka Worker] Connection/Logic Error: {kafka_err} !!!")
     
-    # Проверяем список топиков (заставляет консьюмера обновить метаданные)
-    print("Доступные топики:", consumer.topics())
-    for message in consumer:
-        order_data = message.value
-        print(f"Received order: {order_data}")
-        with app.app_context():
-            order = Order(
-                user_id=order_data.get('user_id'),
-                date=order_data.get('date'),
-                status=order_data.get('status')
-            )
-            db.session.add(order)
-            db.session.commit()
-            print(f"Order saved with id {order.id}")
+    finally:
+        print("--- [Kafka Worker] Stopped ---")
+
+
 # --- Роуты ---
 
 @app.route('/')
