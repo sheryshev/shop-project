@@ -52,14 +52,14 @@ def consume_kafka_messages(topic):
             
 
 def kafka_consumer_worker():
-    print("--- [Kafka Worker] Starting ---")
+    print("--- [Kafka Worker] Starting ---", flush=True)
     
     try:
         # Инициализация консьюмера
         consumer = KafkaConsumer(
             'orders',
             bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
-            group_id='flask-group',
+            group_id='flask-group1',
             auto_offset_reset='earliest',
             enable_auto_commit=True,
             # Добавляем таймаут на запрос метаданных, чтобы не виснуть вечно
@@ -69,10 +69,10 @@ def kafka_consumer_worker():
         
         # Проверка физического соединения
         if consumer.bootstrap_connected():
-            print(f"--- [Kafka Worker] Connected to {KAFKA_BOOTSTRAP_SERVERS} ---")
-            print(f"--- [Kafka Worker] Subscribed to topics: {consumer.topics()} ---")
+            print(f"--- [Kafka Worker] Connected to {KAFKA_BOOTSTRAP_SERVERS} ---", flush=True)
+            print(f"--- [Kafka Worker] Subscribed to topics: {consumer.topics()} ---", flush=True)
         else:
-            print("!!! [Kafka Worker] CRITICAL: Could not connect to brokers !!!")
+            print("!!! [Kafka Worker] CRITICAL: Could not connect to brokers !!!", flush=True)
             return
         consumer.poll(timeout_ms=1000)
         # Основной цикл обработки
@@ -90,17 +90,17 @@ def kafka_consumer_worker():
                     )
                     db.session.add(order)
                     db.session.commit()
-                    print(f"--- [Kafka Worker] Order saved with ID: {order.id} ---")
+                    print(f"--- [Kafka Worker] Order saved with ID: {order.id} ---", flush=True)
             
             except Exception as db_err:
                 print(f"!!! [Kafka Worker] Database Error: {db_err} !!!")
                 db.session.rollback() # Откатываем сессию при ошибке
 
     except Exception as kafka_err:
-        print(f"!!! [Kafka Worker] Connection/Logic Error: {kafka_err} !!!")
+        print(f"!!! [Kafka Worker] Connection/Logic Error: {kafka_err} !!!", flush=True)
     
     finally:
-        print("--- [Kafka Worker] Stopped ---")
+        print("--- [Kafka Worker] Stopped ---", flush=True)
 
 
 # --- Роуты ---
