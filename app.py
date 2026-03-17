@@ -50,9 +50,6 @@ def consume_kafka_messages(topic):
         if len(kafka_messages_store[topic]) > 50:
             kafka_messages_store[topic].pop(0)
             
-import json
-import logging
-from kafka import KafkaConsumer
 
 def kafka_consumer_worker():
     print("--- [Kafka Worker] Starting ---")
@@ -179,8 +176,8 @@ def documentation():
 
 if __name__ == '__main__':
     # Запускаем Kafka слушателя в отдельном потоке
-    consumer_thread = threading.Thread(target=kafka_consumer_worker, daemon=True)
-    consumer_thread.start()
+    #consumer_thread = threading.Thread(target=kafka_consumer_worker, daemon=True)
+    #consumer_thread.start()
 
     # Запускаем Flask сервер
     port = int(os.environ.get("PORT", 5000))
