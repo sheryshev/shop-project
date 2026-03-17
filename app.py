@@ -54,7 +54,14 @@ def kafka_consumer_worker():
     except Exception as e:
         print(f"Error starting Kafka consumer: {e}")
         return
-
+    # Проверяем, видит ли он брокера реально
+    if not consumer.bootstrap_connected():
+        print("Критическая ошибка: Нет физического соединения с брокером!")
+    else:
+        print("Физическое соединение установлено.")
+    
+    # Проверяем список топиков (заставляет консьюмера обновить метаданные)
+    print("Доступные топики:", consumer.topics())
     for message in consumer:
         order_data = message.value
         print(f"Received order: {order_data}")
