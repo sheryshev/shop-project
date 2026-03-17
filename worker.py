@@ -11,6 +11,15 @@ from app import app, db, Order
 # Настройки Kafka из переменных окружения Railway
 KAFKA_BOOTSTRAP_SERVERS = os.getenv('KAFKA_BOOTSTRAP_SERVERS', 'localhost:9092')
 
+print("--- [DEBUG] Файл worker.py запущен ---", flush=True)
+
+try:
+    from app import app, db, Order
+    print("--- [DEBUG] Импорты из app.py прошли успешно ---", flush=True)
+except Exception as e:
+    print(f"--- [DEBUG] ОШИБКА ИМПОРТА: {e} ---", flush=True)
+    sys.exit(1)
+    
 def run_worker():
     print("--- [Worker] Инициализация консьюмера... ---")
     
